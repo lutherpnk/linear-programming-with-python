@@ -1,6 +1,6 @@
 # Linear Programming - IFSEMG
 
-Programa criado para resolver um estudo de caso de distribuição de energia elétrica:
+## Solução de estudo de caso de distribuição de energia elétrica
 
 "Uma Companhia de Distribuição de Energia (CDE) compra energia em leilões e a revende para empresas que contratam
 seus serviços. A revenda garante aos compradores preços mais acessíveis, mas não garante que toda a demanda seja
@@ -23,13 +23,16 @@ Para facilitar a tomada de decisão, a empresa deseja elaborar um programa que a
 decidindo quais as melhores estratégias de distribuição, de forma a minimizar os custos de logística, decidindo, também,
 quais demandas deixarão de ser atendidas."
 
-É possível obter a solução do caso utilizando de programação linear. A Programação Linear é basicamente um subconjunto da otimização. Programação linear ou otimização linear é uma técnica de otimização em que tentamos encontrar um valor ótimo para uma função objetivo linear para um sistema de restrições lineares usando um conjunto variável de variáveis ​​de decisão.
+É possível obter a solução do caso utilizando de programação linear. A Programação Linear é basicamente um subconjunto da otimização. Programação linear ou otimização linear é uma técnica de otimização em que tentamos encontrar um valor ótimo para uma função objetivo linear para um sistema de restrições lineares usando um conjunto variável de variáveis de decisão.
 
 O script faz uso da biblioteca PulP, conhecida por facilitar a solução de casos de otimização, que facilita a modelagem dos dados e retorna a solução do caso em funções simples.
 
 Além de resolver o problema da Companhia de Distribuição de Energia, o script realiza a saída dos dados em uma planilha em formato CSV. Facilitando o usuário a visualização e manipulação dos dados já tratados pelo script.
 
+## Instalação
+
 Para fazer uso do script, é necessário instalar as bibliotecas usadas no desenvolvimento. Basta digitar no seu terminal:
-pip install -r requirements.txt
+
+`pip install -r requirements.txt`
 
 Logo após a instalação das bibliotecas, execute o arquivo main.py.
