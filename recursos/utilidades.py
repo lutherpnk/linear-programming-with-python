@@ -9,10 +9,10 @@ def converter_lista(lista=list):
     return str_lista
 
 
-def coletar_custo(lista_do_custo=list):
+def coletar_custo(lista_do_custo=list):    
     lista_custo = []
-    for listas in lista_do_custo:
-        for valor in listas:
+    for lista in lista_do_custo:
+        for valor in lista:
             lista_custo.append(valor)
     return lista_custo
 
@@ -50,9 +50,9 @@ def obter_resultado_por_empresa(num_empresas, localizacoes_dos_indices_tratados,
     return resultados
 
 
-def tratamento_resultado_final(resultado_final):
+def tratamento_beta(resultado_final):
+    from openpyxl import Workbook
     from recursos.dados import custo_oferta
-    import csv
 
 
     resultado_por_variavel = resultado_final['Resultado Final']['Resultado por variável']
@@ -60,75 +60,78 @@ def tratamento_resultado_final(resultado_final):
     resultado_por_empresa = resultado_final['Resultado Final']['Resultado por empresa']
     custo_total = resultado_final['Resultado Final']['Custo Total']
 
-    with open('Resultado Final' +'.csv', 'w') as csv_file:
-        writer = csv.writer(csv_file)
-        
-        # Variáveis
-        writer.writerow(['Variáveis'])
-        writer.writerow(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
-        contador_de_coluna = 0
-        contador_empresa = 0
-        for valor in resultado_do_produto.keys():
-            if contador_de_coluna == 0:
-                contador_empresa += 1
-                lista_coluna = [f'Empresa 0{contador_empresa}']
-                contador_de_coluna += 1
-            lista_coluna.append(f'{valor}')
-            contador_de_coluna += 1
-            if contador_de_coluna == 10:
-                writer.writerow(lista_coluna)
-                contador_de_coluna = 0
-        
-        # Resultado por variável
-        writer.writerow('')
-        writer.writerow(['Resultado por variável'])
-        writer.writerow(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
-        contador_de_coluna = 0
-        contador_empresa = 0
-        for valor in resultado_por_variavel.values():
-            if contador_de_coluna == 0:
-                contador_empresa += 1
-                lista_coluna = [f'Empresa 0{contador_empresa}']
-                contador_de_coluna += 1
-            lista_coluna.append(f'{valor}')
-            contador_de_coluna += 1
-            if contador_de_coluna == 10:
-                writer.writerow(lista_coluna)
-                contador_de_coluna = 0
+    wb = Workbook()
+    nome_do_arquivo = 'Resultado Final.xlsx'
 
-        # Custos
-        writer.writerow('')
-        writer.writerow(['Custos'])
-        writer.writerow(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
-        contador_de_coluna = 0
-        contador_empresa = 0
-        for valor in resultado_do_produto.values():
-            if contador_de_coluna == 0:
-                contador_empresa += 1
-                lista_coluna = [f'Empresa 0{contador_empresa}']
-                contador_de_coluna += 1
-            lista_coluna.append(f'{valor}')
+    # Variáveis
+    w_sheet_1 = wb.active
+    w_sheet_1.title = 'Variáveis'
+    w_sheet_1.append(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
+    
+    contador_de_coluna = 0
+    contador_empresa = 0
+    for valor in resultado_do_produto.keys():
+        if contador_de_coluna == 0:
+            contador_empresa += 1
+            lista_coluna = [f'Empresa 0{contador_empresa}']
             contador_de_coluna += 1
-            if contador_de_coluna == 10:
-                writer.writerow(lista_coluna)
-                contador_de_coluna = 0
-        
-        # Restrição de oferta
-        writer.writerow('')
-        writer.writerow(['Restrição de oferta'])
-        writer.writerow(['Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
-        lista_coluna = [valor for valor in custo_oferta]
-        writer.writerow(lista_coluna)
+        lista_coluna.append(f'{valor}')
+        contador_de_coluna += 1
+        if contador_de_coluna == 10:
+            w_sheet_1.append(lista_coluna)
+            contador_de_coluna = 0
+    
+    # Resultado por variável
+    w_sheet_2 = wb.create_sheet(title='Resultado por variável')
+    w_sheet_2.append(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
 
-        # Restrição de demandas
-        writer.writerow('')
-        writer.writerow(['Restrição de demandas'])
-        writer.writerow(['Empresa 01', 'Empresa 02', 'Empresa 03', 'Empresa 04', 'Empresa 05', 'Empresa 06', 'Empresa 07', 'Empresa 08', 'Empresa 09', 'Empresa 10', 'Empresa 11', 'Empresa 12'])
-        lista_coluna = [valor for valor in resultado_por_empresa.values()]
-        writer.writerow(lista_coluna)
+    contador_de_coluna = 0
+    contador_empresa = 0
+    for valor in resultado_por_variavel.values():
+        if contador_de_coluna == 0:
+            contador_empresa += 1
+            lista_coluna = [f'Empresa 0{contador_empresa}']
+            contador_de_coluna += 1
+        lista_coluna.append(f'{valor}')
+        contador_de_coluna += 1
+        if contador_de_coluna == 10:
+            w_sheet_2.append(lista_coluna)
+            contador_de_coluna = 0
+
+    # Custos
+    w_sheet_3 = wb.create_sheet(title='Custos')
+    w_sheet_3.append(['-', 'Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
+    
+    contador_de_coluna = 0
+    contador_empresa = 0
+    for valor in resultado_do_produto.values():
+        if contador_de_coluna == 0:
+            contador_empresa += 1
+            lista_coluna = [f'Empresa 0{contador_empresa}']
+            contador_de_coluna += 1
+        lista_coluna.append(f'{valor}')
+        contador_de_coluna += 1
+        if contador_de_coluna == 10:
+            w_sheet_3.append(lista_coluna)
+            contador_de_coluna = 0
         
-        # Custo total
-        writer.writerow('')
-        writer.writerow(['Custo Total'])
-        writer.writerow([f'{custo_total}'])
+    # Restrição de oferta
+    w_sheet_4 = wb.create_sheet(title='Restrição de oferta')
+    w_sheet_4.append(['Ofertante 01', 'Ofertante 02', 'Ofertante 03', 'Ofertante 04', 'Ofertante 05', 'Ofertante 06', 'Ofertante 07', 'Ofertante 08', 'Não recebimento'])
+    lista_coluna = [valor for valor in custo_oferta]
+    w_sheet_4.append(lista_coluna)
+
+    # Restrição de demandas
+    w_sheet_5 = wb.create_sheet(title='Restrição de demandas')
+    w_sheet_5.append(['Empresa 01', 'Empresa 02', 'Empresa 03', 'Empresa 04', 'Empresa 05', 'Empresa 06', 'Empresa 07', 'Empresa 08', 'Empresa 09', 'Empresa 10', 'Empresa 11', 'Empresa 12'])
+    lista_coluna = [str(valor) for valor in resultado_por_empresa.values()]
+    w_sheet_5.append(lista_coluna)
+    
+    # Custo total
+    w_sheet_6 = wb.create_sheet(title='Custo Total')
+    w_sheet_6.append(['Custo total'])
+    w_sheet_6.append([f'{custo_total}'])
+
+    wb.save(filename=nome_do_arquivo)    
     pass
+

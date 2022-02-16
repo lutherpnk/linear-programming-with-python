@@ -1,14 +1,13 @@
 from pulp import *
-from recursos.dados import num_empresas, num_ofertantes, custo_matriz, custo_demanda, custo_oferta
-from recursos.utilidades import converter_lista, coletar_custo, obter_indice_x_custo, obter_resultado_por_variavel,obter_produto_do_custo, obter_resultado_por_empresa, tratamento_resultado_final
 from time import sleep
+from recursos.dados import num_empresas, num_ofertantes, custo_matriz, custo_demanda, custo_oferta
+from recursos.utilidades import converter_lista, coletar_custo, obter_indice_x_custo, obter_resultado_por_variavel,obter_produto_do_custo, obter_resultado_por_empresa, tratamento_beta
 import numpy as np
 
 
 def analise_dos_dados():    
     print('[>] Resolução do estudo de caso: Distribuição de Energia Elétrica.')
     sleep(2)
-
     # Iniciando o modelo da biblioteca PulP
     modelo = LpProblem("Distribuição-de-Energia-Elétrica", LpMinimize)
     print('[>] Criando modelo através dos dados em "recursos/dados.py".')
@@ -26,10 +25,14 @@ def analise_dos_dados():
 
     # Custo da demanda e da oferta - Restrições
     print('[>] Obtendo custo da demanda e da oferta (Restrições).')
-    sleep(2)
+    sleep(1)
     for i in range(num_empresas):
-        modelo += lpSum(localizacoes_dos_indices_tratado[i][j] for j in range(num_ofertantes)) <= custo_demanda[i] , "Custo da demanda" + str(i)
+        print(lpSum(localizacoes_dos_indices_tratado[i][j] for j in range(num_ofertantes)) <= custo_demanda[i] , "Custo da demanda " + str(i))
+        modelo += lpSum(localizacoes_dos_indices_tratado[i][j] for j in range(num_ofertantes)) <= custo_demanda[i] , "Custo da demanda " + str(i)
+    print('-----------')
+    sleep(3)
     for j in range(num_ofertantes):
+        print(lpSum(localizacoes_dos_indices_tratado[i][j] for i in range(num_empresas)) >= custo_oferta[j] , "Custo da oferta " + str(j))
         modelo += lpSum(localizacoes_dos_indices_tratado[i][j] for i in range(num_empresas)) >= custo_oferta[j] , "Custo da oferta " + str(j)
 
     # Resolvendo o problema
@@ -38,6 +41,7 @@ def analise_dos_dados():
     print('[>] Resolvendo o caso.')
     modelo.solve()
     sleep(2)
+    
     # Obtendo resultados
     print('[>] Obtendo resultados.')
     sleep(2)
@@ -54,7 +58,10 @@ def analise_dos_dados():
         'Resultado por variável multiplicado': resultado_do_produto,
         'Resultado por empresa': resultado_por_empresa
     }}
-    tratamento_resultado_final(resultado_final)
+    
+    #tratamento_resultado_final(resultado_final)
+    tratamento_beta(resultado_final)
+    
     print('[>] Resultados obtidos. Gerando arquivo CSV.')
     sleep(1.5)
     print('[>] "Resultado Final.csv" gerado com sucesso! Você poderá localizá-lo na pasta raiz do script.')
